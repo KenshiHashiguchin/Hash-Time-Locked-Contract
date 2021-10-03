@@ -38,6 +38,7 @@ contract HashTimeLockedContract is Ownable {
     }
 
     event LockToken(bytes32 _id, address _receiver, bytes32 _hashedSecret);
+    event UnLockToken(bytes32 _id, address _receiver);
 
     modifier isExistId(bytes32 _id) {
         require(swaps[_id].sender == address(0));
@@ -75,11 +76,16 @@ contract HashTimeLockedContract is Ownable {
         if (msg.sender == swaps[_id].receiver) {
             require(swaps[_id].receivableTime <= now, "this swap is expired");
             require(erc20Contract.transfer(swaps[_id].receiver, swaps[_id].value));
+
+            emit UnLockToken(_id, swaps[_id].receiver);
         }
         if (msg.sender == swaps[_id].sender) {
             require(swaps[_id].receivableTime > now, "this swap cannot be unlocked");
             require(erc20Contract.transfer(swaps[_id].sender, swaps[_id].value));
+
+            emit UnLockToken(_id, msg.sender);
         }
+
     }
 
 
