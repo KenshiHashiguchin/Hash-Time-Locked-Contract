@@ -41,11 +41,11 @@ contract HashTimeLockedContract is Ownable {
     event UnLockToken(bytes32 _id, address _receiver);
 
     modifier isExistId(bytes32 _id) {
-        require(swaps[_id].sender != address(0));
+        require(swaps[_id].sender != address(0), 'id not exist');
         _;
     }
     modifier isNotExistId(bytes32 _id) {
-        require(swaps[_id].sender == address(0));
+        require(swaps[_id].sender == address(0), 'id already exist');
         _;
     }
 
@@ -70,7 +70,7 @@ contract HashTimeLockedContract is Ownable {
     }
 
     function unlockToken(bytes32 _id, bytes calldata _secret) external isExistId(_id) {
-        require(swaps[_id].hashedSecret == sha256(_secret));
+        require(swaps[_id].hashedSecret == sha256(_secret), 'secret does not match');
 
         IERC20 erc20Contract = IERC20(swaps[_id].erc20ContractAddress);
         if (msg.sender == swaps[_id].receiver) {
