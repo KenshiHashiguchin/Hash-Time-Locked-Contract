@@ -41,7 +41,7 @@ contract HashTimeLockedContract is Ownable {
     event UnLockToken(bytes32 _id, address _receiver);
 
     modifier isExistId(bytes32 _id) {
-        require(swaps[_id].sender == address(0));
+        require(swaps[_id].sender != address(0));
         _;
     }
     modifier isNotExistId(bytes32 _id) {
