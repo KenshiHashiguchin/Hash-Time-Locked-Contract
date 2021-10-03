@@ -30,10 +30,11 @@ contract HashTimeLockedContract is Ownable {
     uint public maxLockTime;
 
     constructor () public {
-        // 3day
-        maxLockTime = 2592000;
         // 3hour
         minLockTime = 10800;
+
+        // 3day
+        maxLockTime = 2592000;
     }
 
     event LockToken(bytes32 _id, address _receiver, bytes32 _hashedSecret);
@@ -82,7 +83,10 @@ contract HashTimeLockedContract is Ownable {
     }
 
 
-    // ロック時間変更
+    function getReceivableTime(bytes32 _id) public view returns (uint) {
+        return swaps[_id].receivableTime;
+    }
+
     function changeMaxLockTime(uint _maxLockTime) external onlyOwner {
         maxLockTime = _maxLockTime;
     }
